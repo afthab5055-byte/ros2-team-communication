@@ -24,6 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'chat_node = ros_team.chat_node:main',
+            'chat_subscriber = ros_team.chat_subscriber:main',
         ],
     },
 )
