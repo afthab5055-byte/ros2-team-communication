@@ -2,6 +2,8 @@ import rclpy
 from rclpy.node import Node
 from ros_team_msgs.msg import ChatMessage
 import time
+import threading
+import uuid
 
 class ChatNode(Node):
     def __init__(self):
@@ -9,21 +11,25 @@ class ChatNode(Node):
         self.get_logger().info('the node is running')
 
         self.publisher_ = self.create_publisher(ChatMessage, '/chat', 10)
-        self.timer = self.create_timer(2.0,self.callback)
+        self.username = input('Enter your username: ')
+        self.user_id = str(uuid.uuid4())[:6]
+        self.get_logger().info(f'User ID: {self.user_id}')
+        threading.Thread(target=self.input_loop, daemon=True).start()
 
-    def callback(self):
+    def input_loop(self):
 
-        msg = ChatMessage()
+        while True:
+            message = input('Enter message') # pauses that input thread and wait for the user to type message.
+            msg = ChatMessage()
 
-        # sender information
+            msg.sender.username = self.username  # everytime the username should be there.
+            msg.sender.user_id = self.user_id      # everytime the user_id should be there.
 
-        msg.sender.username = 'afthab'
-        msg.sender.user_id = '001'
+            msg.message = message           # copies the typed text into ROS message.
+            msg.timestamp = int(time.time())
 
-        msg.message = 'Hello from Afthab'
-        msg.timestamp = int(time.time())
-
-        self.publisher_.publish(msg)
+            self.publisher_.publish(msg)
+        
 
 
 def main(args=None):

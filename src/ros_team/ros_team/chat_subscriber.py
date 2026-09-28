@@ -10,8 +10,7 @@ class ChatSubscriber(Node):
 
     def chat_callback(self,msg):
 
-        self.get_logger().info(f'[{msg.sender.username}]{msg.message}')
-
+        self.get_logger().info(f'[{msg.sender.username}] [ID: {msg.sender.user_id}]  {msg.message}')
 
 
 def main(args=None):
