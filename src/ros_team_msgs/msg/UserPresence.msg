@@ -1,0 +1,2 @@
+UserInfo user
+int64 timestamp
