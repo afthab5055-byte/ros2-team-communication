@@ -28,6 +28,7 @@ setup(
             'chat_subscriber = ros_team.chat_subscriber:main',
             'presence_node = ros_team.presence_node:main',
             'presence_monitor = ros_team.presence_monitor:main',
+            'ros_monitor = ros_team.ros_monitor:main',
         ],
     },
 )
