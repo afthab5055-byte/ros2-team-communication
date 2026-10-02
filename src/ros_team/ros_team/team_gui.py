@@ -554,6 +554,30 @@ class TeamGUI(QMainWindow):
         )
 
         # =========================================================
+        # APPLICATION FOOTER
+        # =========================================================
+
+        footer = QLabel(
+        "ROS 2  •  DDS  •  Multi-User Team Communication"
+        )
+
+        footer.setAlignment(
+        Qt.AlignCenter
+        )
+
+        footer.setStyleSheet("""
+            QLabel {
+                color: #8b949e;
+                font-size: 11px;
+                padding: 5px;
+            }
+        """)
+
+        main_layout.addWidget(
+        footer
+        )
+
+        # =========================================================
         # ROS PROCESSING TIMER
         # =========================================================
 
