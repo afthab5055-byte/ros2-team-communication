@@ -35,35 +35,31 @@ class TeamGUI(QMainWindow):
 
         super().__init__()
 
-        # ==================================================
+        # =========================================================
         # USER INFORMATION
-        # ==================================================
+        # =========================================================
 
         self.username = username
+        self.user_id = str(uuid.uuid4())[:6]
 
-        self.user_id = str(
-            uuid.uuid4()
-        )[:6]
-
-        # ==================================================
+        # =========================================================
         # ROS NODE
-        # ==================================================
+        # =========================================================
 
         self.ros_node = Node(
             f"team_gui_{self.user_id}"
         )
 
-        # ==================================================
+        # =========================================================
         # DATA STORAGE
-        # ==================================================
+        # =========================================================
 
         self.users = {}
-
         self.known_nodes = set()
 
-        # ==================================================
+        # =========================================================
         # CHAT PUBLISHER
-        # ==================================================
+        # =========================================================
 
         self.chat_publisher = (
             self.ros_node.create_publisher(
@@ -73,9 +69,9 @@ class TeamGUI(QMainWindow):
             )
         )
 
-        # ==================================================
+        # =========================================================
         # CHAT SUBSCRIBER
-        # ==================================================
+        # =========================================================
 
         self.chat_subscription = (
             self.ros_node.create_subscription(
@@ -86,9 +82,9 @@ class TeamGUI(QMainWindow):
             )
         )
 
-        # ==================================================
+        # =========================================================
         # PRESENCE PUBLISHER
-        # ==================================================
+        # =========================================================
 
         self.presence_publisher = (
             self.ros_node.create_publisher(
@@ -98,9 +94,9 @@ class TeamGUI(QMainWindow):
             )
         )
 
-        # ==================================================
+        # =========================================================
         # PRESENCE SUBSCRIBER
-        # ==================================================
+        # =========================================================
 
         self.presence_subscription = (
             self.ros_node.create_subscription(
@@ -111,9 +107,9 @@ class TeamGUI(QMainWindow):
             )
         )
 
-        # ==================================================
+        # =========================================================
         # WINDOW
-        # ==================================================
+        # =========================================================
 
         self.setWindowTitle(
             "ROS 2 Team Communication"
@@ -121,12 +117,12 @@ class TeamGUI(QMainWindow):
 
         self.resize(
             1200,
-            750
+            780
         )
 
-        # ==================================================
+        # =========================================================
         # CENTRAL WIDGET
-        # ==================================================
+        # =========================================================
 
         central_widget = QWidget()
 
@@ -149,9 +145,9 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # ==================================================
+        # =========================================================
         # HEADER
-        # ==================================================
+        # =========================================================
 
         header_container = QWidget()
 
@@ -166,7 +162,6 @@ class TeamGUI(QMainWindow):
             5
         )
 
-        # LEFT SPACER
         left_spacer = QWidget()
 
         header_layout.addWidget(
@@ -175,7 +170,6 @@ class TeamGUI(QMainWindow):
             0
         )
 
-        # TITLE
         header = QLabel(
             "ROS 2 TEAM COMMUNICATION"
         )
@@ -198,7 +192,6 @@ class TeamGUI(QMainWindow):
             1
         )
 
-        # DOMAIN STATUS
         domain_id = os.environ.get(
             "ROS_DOMAIN_ID",
             "0"
@@ -246,9 +239,9 @@ class TeamGUI(QMainWindow):
             header_container
         )
 
-        # ==================================================
+        # =========================================================
         # USER INFORMATION
-        # ==================================================
+        # =========================================================
 
         user_info = QLabel(
             f"USER: {self.username}    |    ID: {self.user_id}"
@@ -269,9 +262,39 @@ class TeamGUI(QMainWindow):
             user_info
         )
 
-        # ==================================================
+        # =========================================================
+        # SYSTEM STATUS BAR
+        # =========================================================
+
+        self.system_status = QLabel(
+            "ROS 2: CONNECTED   |   "
+            f"DOMAIN: {domain_id}   |   "
+            "USERS: 1   |   "
+            "NODES: 0"
+        )
+
+        self.system_status.setAlignment(
+            Qt.AlignCenter
+        )
+
+        self.system_status.setStyleSheet("""
+            QLabel {
+                background-color: #171d25;
+                border: 1px solid #303945;
+                border-radius: 6px;
+                padding: 8px;
+                font-size: 13px;
+                font-weight: bold;
+            }
+        """)
+
+        main_layout.addWidget(
+            self.system_status
+        )
+
+        # =========================================================
         # MAIN AREA
-        # ==================================================
+        # =========================================================
 
         main_area = QHBoxLayout()
 
@@ -279,9 +302,9 @@ class TeamGUI(QMainWindow):
             10
         )
 
-        # ==================================================
+        # =========================================================
         # LEFT PANEL
-        # ==================================================
+        # =========================================================
 
         left_frame = QFrame()
 
@@ -304,7 +327,6 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # TEAM MEMBERS TITLE
         members_title = QLabel(
             "TEAM MEMBERS"
         )
@@ -320,14 +342,12 @@ class TeamGUI(QMainWindow):
             members_title
         )
 
-        # USER LIST
         self.user_list = QListWidget()
 
         left_panel.addWidget(
             self.user_list
         )
 
-        # USER ACTIVITY TITLE
         activity_title = QLabel(
             "USER ACTIVITY"
         )
@@ -343,7 +363,6 @@ class TeamGUI(QMainWindow):
             activity_title
         )
 
-        # USER ACTIVITY
         self.activity_log = QTextEdit()
 
         self.activity_log.setReadOnly(
@@ -354,9 +373,9 @@ class TeamGUI(QMainWindow):
             self.activity_log
         )
 
-        # ==================================================
+        # =========================================================
         # CENTER PANEL
-        # ==================================================
+        # =========================================================
 
         center_frame = QFrame()
 
@@ -379,7 +398,6 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # CHAT TITLE
         chat_title = QLabel(
             "TEAM CHAT"
         )
@@ -395,7 +413,6 @@ class TeamGUI(QMainWindow):
             chat_title
         )
 
-        # CHAT DISPLAY
         self.chat_display = QTextEdit()
 
         self.chat_display.setReadOnly(
@@ -405,10 +422,6 @@ class TeamGUI(QMainWindow):
         center_panel.addWidget(
             self.chat_display
         )
-
-        # ==================================================
-        # MESSAGE INPUT
-        # ==================================================
 
         message_layout = QHBoxLayout()
 
@@ -430,7 +443,6 @@ class TeamGUI(QMainWindow):
             self.message_input
         )
 
-        # SEND BUTTON
         send_button = QPushButton(
             "SEND"
         )
@@ -447,9 +459,9 @@ class TeamGUI(QMainWindow):
             message_layout
         )
 
-        # ==================================================
+        # =========================================================
         # RIGHT PANEL
-        # ==================================================
+        # =========================================================
 
         right_frame = QFrame()
 
@@ -472,7 +484,6 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # ROS NODES TITLE
         nodes_title = QLabel(
             "ROS NODES"
         )
@@ -488,14 +499,12 @@ class TeamGUI(QMainWindow):
             nodes_title
         )
 
-        # ROS NODE LIST
         self.node_list = QListWidget()
 
         right_panel.addWidget(
             self.node_list
         )
 
-        # ROS EVENTS TITLE
         ros_events_title = QLabel(
             "ROS EVENTS"
         )
@@ -511,7 +520,6 @@ class TeamGUI(QMainWindow):
             ros_events_title
         )
 
-        # ROS EVENTS
         self.ros_events = QTextEdit()
 
         self.ros_events.setReadOnly(
@@ -522,9 +530,9 @@ class TeamGUI(QMainWindow):
             self.ros_events
         )
 
-        # ==================================================
+        # =========================================================
         # ADD PANELS
-        # ==================================================
+        # =========================================================
 
         main_area.addWidget(
             left_frame,
@@ -545,9 +553,9 @@ class TeamGUI(QMainWindow):
             main_area
         )
 
-        # ==================================================
+        # =========================================================
         # ROS PROCESSING TIMER
-        # ==================================================
+        # =========================================================
 
         self.ros_timer = QTimer()
 
@@ -559,9 +567,9 @@ class TeamGUI(QMainWindow):
             50
         )
 
-        # ==================================================
+        # =========================================================
         # PRESENCE TIMER
-        # ==================================================
+        # =========================================================
 
         self.presence_timer = QTimer()
 
@@ -573,9 +581,9 @@ class TeamGUI(QMainWindow):
             1000
         )
 
-        # ==================================================
+        # =========================================================
         # USER CHECK TIMER
-        # ==================================================
+        # =========================================================
 
         self.user_check_timer = QTimer()
 
@@ -587,9 +595,9 @@ class TeamGUI(QMainWindow):
             1000
         )
 
-        # ==================================================
+        # =========================================================
         # ROS NODE CHECK TIMER
-        # ==================================================
+        # =========================================================
 
         self.node_check_timer = QTimer()
 
@@ -601,9 +609,12 @@ class TeamGUI(QMainWindow):
             2000
         )
 
-    # ======================================================
+        # Initial user list
+        self.update_user_list()
+
+    # =============================================================
     # SEND CHAT MESSAGE
-    # ======================================================
+    # =============================================================
 
     def send_message(self):
 
@@ -638,9 +649,9 @@ class TeamGUI(QMainWindow):
 
         self.message_input.clear()
 
-    # ======================================================
+    # =============================================================
     # CHAT CALLBACK
-    # ======================================================
+    # =============================================================
 
     def chat_callback(self, msg):
 
@@ -660,9 +671,9 @@ class TeamGUI(QMainWindow):
             f"{msg.message}"
         )
 
-    # ======================================================
+    # =============================================================
     # PUBLISH PRESENCE
-    # ======================================================
+    # =============================================================
 
     def publish_presence(self):
 
@@ -684,9 +695,9 @@ class TeamGUI(QMainWindow):
             msg
         )
 
-    # ======================================================
+    # =============================================================
     # PRESENCE CALLBACK
-    # ======================================================
+    # =============================================================
 
     def presence_callback(self, msg):
 
@@ -711,12 +722,15 @@ class TeamGUI(QMainWindow):
                 "%H:%M:%S"
             )
 
-            self.activity_log.append(
-                f"[{timestamp}] "
-                f"User joined: "
-                f"{username} "
-                f"[{user_id}]"
-            )
+            # Don't report ourselves as a new user
+            if user_id != self.user_id:
+
+                self.activity_log.append(
+                    f"[{timestamp}] "
+                    f"User joined: "
+                    f"{username} "
+                    f"[{user_id}]"
+                )
 
         else:
 
@@ -726,9 +740,9 @@ class TeamGUI(QMainWindow):
 
         self.update_user_list()
 
-    # ======================================================
+    # =============================================================
     # CHECK OFFLINE USERS
-    # ======================================================
+    # =============================================================
 
     def check_users(self):
 
@@ -751,16 +765,19 @@ class TeamGUI(QMainWindow):
                     "%H:%M:%S"
                 )
 
-                self.activity_log.append(
-                    f"[{timestamp}] "
-                    f"User offline: "
-                    f"{user_data['username']} "
-                    f"[{user_id}]"
-                )
+                # Don't mark ourselves offline
+                if user_id != self.user_id:
 
-                users_to_remove.append(
-                    user_id
-                )
+                    self.activity_log.append(
+                        f"[{timestamp}] "
+                        f"User offline: "
+                        f"{user_data['username']} "
+                        f"[{user_id}]"
+                    )
+
+                    users_to_remove.append(
+                        user_id
+                    )
 
         for user_id in users_to_remove:
 
@@ -770,26 +787,19 @@ class TeamGUI(QMainWindow):
 
         self.update_user_list()
 
-    # ======================================================
+    # =============================================================
     # UPDATE TEAM MEMBER LIST
-    # ======================================================
+    # =============================================================
 
     def update_user_list(self):
 
         self.user_list.clear()
 
-        # --------------------------------------------------
-        # CURRENT USER
-        # --------------------------------------------------
-
+        # Always show current user
         self.user_list.addItem(
             f"● {self.username} "
             f"[{self.user_id}]  (YOU)"
         )
-
-        # --------------------------------------------------
-        # OTHER USERS
-        # --------------------------------------------------
 
         for user_id, user_data in (
             self.users.items()
@@ -803,9 +813,11 @@ class TeamGUI(QMainWindow):
                 f"[{user_id}]  ONLINE"
             )
 
-    # ======================================================
+        self.update_system_status()
+
+    # =============================================================
     # CHECK ROS NODES
-    # ======================================================
+    # =============================================================
 
     def check_ros_nodes(self):
 
@@ -818,10 +830,6 @@ class TeamGUI(QMainWindow):
             current_nodes
         )
 
-        # --------------------------------------------------
-        # FIRST SCAN
-        # --------------------------------------------------
-
         if not self.known_nodes:
 
             self.known_nodes = (
@@ -829,12 +837,9 @@ class TeamGUI(QMainWindow):
             )
 
             self.update_node_list()
+            self.update_system_status()
 
             return
-
-        # --------------------------------------------------
-        # NEW NODES
-        # --------------------------------------------------
 
         new_nodes = (
             current_nodes
@@ -858,10 +863,6 @@ class TeamGUI(QMainWindow):
                 f"NODE JOINED: "
                 f"{node_name}"
             )
-
-        # --------------------------------------------------
-        # REMOVED NODES
-        # --------------------------------------------------
 
         removed_nodes = (
             self.known_nodes
@@ -891,10 +892,11 @@ class TeamGUI(QMainWindow):
         )
 
         self.update_node_list()
+        self.update_system_status()
 
-    # ======================================================
+    # =============================================================
     # UPDATE ROS NODE LIST
-    # ======================================================
+    # =============================================================
 
     def update_node_list(self):
 
@@ -914,9 +916,44 @@ class TeamGUI(QMainWindow):
                 f"● {node_name}"
             )
 
-    # ======================================================
+    # =============================================================
+    # UPDATE SYSTEM STATUS
+    # =============================================================
+
+    def update_system_status(self):
+
+        domain_id = os.environ.get(
+            "ROS_DOMAIN_ID",
+            "0"
+        )
+
+        # Count unique users in the presence table.
+        # Our own user is already added when our
+        # presence message is received.
+        total_users = len(
+            self.users
+        )
+
+        # At application startup our own presence
+        # may not have arrived yet.
+        if self.user_id not in self.users:
+
+            total_users += 1
+
+        node_count = len(
+            self.known_nodes
+        )
+
+        self.system_status.setText(
+            "ROS 2: CONNECTED   |   "
+            f"DOMAIN: {domain_id}   |   "
+            f"USERS: {total_users}   |   "
+            f"NODES: {node_count}"
+        )
+
+    # =============================================================
     # FORMAT ROS NODE NAME
-    # ======================================================
+    # =============================================================
 
     def format_node_name(self, node):
 
@@ -930,9 +967,9 @@ class TeamGUI(QMainWindow):
             f"{namespace}/{node_name}"
         )
 
-    # ======================================================
+    # =============================================================
     # PROCESS ROS
-    # ======================================================
+    # =============================================================
 
     def process_ros(self):
 
@@ -943,9 +980,9 @@ class TeamGUI(QMainWindow):
                 timeout_sec=0
             )
 
-    # ======================================================
+    # =============================================================
     # CLOSE APPLICATION
-    # ======================================================
+    # =============================================================
 
     def closeEvent(self, event):
 
@@ -966,9 +1003,9 @@ class TeamGUI(QMainWindow):
         event.accept()
 
 
-# ==========================================================
+# =================================================================
 # MAIN
-# ==========================================================
+# =================================================================
 
 def main(args=None):
 
@@ -980,9 +1017,9 @@ def main(args=None):
         sys.argv
     )
 
-    # ======================================================
+    # =============================================================
     # DARK ROBOTICS-STYLE THEME
-    # ======================================================
+    # =============================================================
 
     app.setStyleSheet("""
         QMainWindow {
@@ -1062,18 +1099,18 @@ def main(args=None):
         }
     """)
 
-    # ======================================================
+    # =============================================================
     # CTRL+C SUPPORT
-    # ======================================================
+    # =============================================================
 
     signal.signal(
         signal.SIGINT,
         lambda sig, frame: app.quit()
     )
 
-    # ======================================================
+    # =============================================================
     # USERNAME INPUT
-    # ======================================================
+    # =============================================================
 
     username, ok = QInputDialog.getText(
         None,
@@ -1089,9 +1126,9 @@ def main(args=None):
 
     username = username.strip()
 
-    # ======================================================
+    # =============================================================
     # CREATE GUI
-    # ======================================================
+    # =============================================================
 
     window = TeamGUI(
         username
@@ -1099,18 +1136,14 @@ def main(args=None):
 
     window.show()
 
-    # ======================================================
+    # =============================================================
     # START APPLICATION
-    # ======================================================
+    # =============================================================
 
     sys.exit(
         app.exec_()
     )
 
-
-# ==========================================================
-# PROGRAM ENTRY
-# ==========================================================
 
 if __name__ == "__main__":
 
