@@ -23,6 +23,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QPushButton,
     QInputDialog,
+    QFrame,
 )
 
 from PyQt5.QtCore import Qt, QTimer
@@ -44,9 +45,9 @@ class TeamGUI(QMainWindow):
         self.users = {}
         self.known_nodes = set()
 
-        # --------------------------------------------------
+        # ==================================================
         # CHAT PUBLISHER
-        # --------------------------------------------------
+        # ==================================================
 
         self.chat_publisher = self.ros_node.create_publisher(
             ChatMessage,
@@ -54,9 +55,9 @@ class TeamGUI(QMainWindow):
             10
         )
 
-        # --------------------------------------------------
+        # ==================================================
         # CHAT SUBSCRIBER
-        # --------------------------------------------------
+        # ==================================================
 
         self.chat_subscription = self.ros_node.create_subscription(
             ChatMessage,
@@ -65,9 +66,9 @@ class TeamGUI(QMainWindow):
             10
         )
 
-        # --------------------------------------------------
+        # ==================================================
         # PRESENCE PUBLISHER
-        # --------------------------------------------------
+        # ==================================================
 
         self.presence_publisher = self.ros_node.create_publisher(
             UserPresence,
@@ -75,9 +76,9 @@ class TeamGUI(QMainWindow):
             10
         )
 
-        # --------------------------------------------------
+        # ==================================================
         # PRESENCE SUBSCRIBER
-        # --------------------------------------------------
+        # ==================================================
 
         self.presence_subscription = self.ros_node.create_subscription(
             UserPresence,
@@ -86,9 +87,9 @@ class TeamGUI(QMainWindow):
             10
         )
 
-        # --------------------------------------------------
+        # ==================================================
         # WINDOW
-        # --------------------------------------------------
+        # ==================================================
 
         self.setWindowTitle(
             "ROS 2 Team Communication"
@@ -109,6 +110,17 @@ class TeamGUI(QMainWindow):
             central_widget
         )
 
+        main_layout.setContentsMargins(
+            12,
+            8,
+            12,
+            12
+        )
+
+        main_layout.setSpacing(
+            8
+        )
+
         # ==================================================
         # HEADER
         # ==================================================
@@ -126,7 +138,6 @@ class TeamGUI(QMainWindow):
             5
         )
 
-        # Left spacer
         left_spacer = QWidget()
 
         header_layout.addWidget(
@@ -135,7 +146,6 @@ class TeamGUI(QMainWindow):
             0
         )
 
-        # Application title
         header = QLabel(
             "ROS 2 TEAM COMMUNICATION"
         )
@@ -158,7 +168,6 @@ class TeamGUI(QMainWindow):
             1
         )
 
-        # ROS domain status
         domain_id = os.environ.get(
             "ROS_DOMAIN_ID",
             "0"
@@ -186,7 +195,6 @@ class TeamGUI(QMainWindow):
             2
         )
 
-        # Equal column widths
         header_layout.setColumnStretch(
             0,
             1
@@ -235,20 +243,46 @@ class TeamGUI(QMainWindow):
 
         main_area = QHBoxLayout()
 
+        main_area.setSpacing(
+            10
+        )
+
         # ==================================================
         # LEFT PANEL
         # ==================================================
 
-        left_panel = QVBoxLayout()
+        left_frame = QFrame()
+
+        left_frame.setObjectName(
+            "panel"
+        )
+
+        left_panel = QVBoxLayout(
+            left_frame
+        )
+
+        left_panel.setContentsMargins(
+            12,
+            12,
+            12,
+            12
+        )
+
+        left_panel.setSpacing(
+            8
+        )
 
         # TEAM MEMBERS
         members_title = QLabel(
             "TEAM MEMBERS"
         )
 
-        members_title.setStyleSheet(
-            "font-weight: bold; font-size: 16px;"
-        )
+        members_title.setStyleSheet("""
+            QLabel {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        """)
 
         left_panel.addWidget(
             members_title
@@ -265,9 +299,12 @@ class TeamGUI(QMainWindow):
             "USER ACTIVITY"
         )
 
-        activity_title.setStyleSheet(
-            "font-weight: bold; font-size: 16px;"
-        )
+        activity_title.setStyleSheet("""
+            QLabel {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        """)
 
         left_panel.addWidget(
             activity_title
@@ -287,16 +324,38 @@ class TeamGUI(QMainWindow):
         # CENTER PANEL
         # ==================================================
 
-        center_panel = QVBoxLayout()
+        center_frame = QFrame()
+
+        center_frame.setObjectName(
+            "panel"
+        )
+
+        center_panel = QVBoxLayout(
+            center_frame
+        )
+
+        center_panel.setContentsMargins(
+            12,
+            12,
+            12,
+            12
+        )
+
+        center_panel.setSpacing(
+            8
+        )
 
         # TEAM CHAT
         chat_title = QLabel(
             "TEAM CHAT"
         )
 
-        chat_title.setStyleSheet(
-            "font-weight: bold; font-size: 16px;"
-        )
+        chat_title.setStyleSheet("""
+            QLabel {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        """)
 
         center_panel.addWidget(
             chat_title
@@ -314,6 +373,10 @@ class TeamGUI(QMainWindow):
 
         # MESSAGE INPUT
         message_layout = QHBoxLayout()
+
+        message_layout.setSpacing(
+            8
+        )
 
         self.message_input = QLineEdit()
 
@@ -350,16 +413,38 @@ class TeamGUI(QMainWindow):
         # RIGHT PANEL
         # ==================================================
 
-        right_panel = QVBoxLayout()
+        right_frame = QFrame()
+
+        right_frame.setObjectName(
+            "panel"
+        )
+
+        right_panel = QVBoxLayout(
+            right_frame
+        )
+
+        right_panel.setContentsMargins(
+            12,
+            12,
+            12,
+            12
+        )
+
+        right_panel.setSpacing(
+            8
+        )
 
         # ROS NODES
         nodes_title = QLabel(
             "ROS NODES"
         )
 
-        nodes_title.setStyleSheet(
-            "font-weight: bold; font-size: 16px;"
-        )
+        nodes_title.setStyleSheet("""
+            QLabel {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        """)
 
         right_panel.addWidget(
             nodes_title
@@ -376,9 +461,12 @@ class TeamGUI(QMainWindow):
             "ROS EVENTS"
         )
 
-        ros_events_title.setStyleSheet(
-            "font-weight: bold; font-size: 16px;"
-        )
+        ros_events_title.setStyleSheet("""
+            QLabel {
+                font-weight: bold;
+                font-size: 16px;
+            }
+        """)
 
         right_panel.addWidget(
             ros_events_title
@@ -395,21 +483,21 @@ class TeamGUI(QMainWindow):
         )
 
         # ==================================================
-        # PANEL SIZES
+        # ADD PANELS TO MAIN AREA
         # ==================================================
 
-        main_area.addLayout(
-            left_panel,
+        main_area.addWidget(
+            left_frame,
             1
         )
 
-        main_area.addLayout(
-            center_panel,
+        main_area.addWidget(
+            center_frame,
             2
         )
 
-        main_area.addLayout(
-            right_panel,
+        main_area.addWidget(
+            right_frame,
             1
         )
 
@@ -783,6 +871,12 @@ def main(args=None):
             background-color: #12161c;
             color: #e6edf3;
             font-family: "DejaVu Sans";
+        }
+
+        QFrame#panel {
+            background-color: #171d25;
+            border: 1px solid #303945;
+            border-radius: 8px;
         }
 
         QLabel {
