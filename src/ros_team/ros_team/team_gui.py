@@ -35,56 +35,80 @@ class TeamGUI(QMainWindow):
 
         super().__init__()
 
+        # ==================================================
+        # USER INFORMATION
+        # ==================================================
+
         self.username = username
-        self.user_id = str(uuid.uuid4())[:6]
+
+        self.user_id = str(
+            uuid.uuid4()
+        )[:6]
+
+        # ==================================================
+        # ROS NODE
+        # ==================================================
 
         self.ros_node = Node(
             f"team_gui_{self.user_id}"
         )
 
+        # ==================================================
+        # DATA STORAGE
+        # ==================================================
+
         self.users = {}
+
         self.known_nodes = set()
 
         # ==================================================
         # CHAT PUBLISHER
         # ==================================================
 
-        self.chat_publisher = self.ros_node.create_publisher(
-            ChatMessage,
-            "/chat",
-            10
+        self.chat_publisher = (
+            self.ros_node.create_publisher(
+                ChatMessage,
+                "/chat",
+                10
+            )
         )
 
         # ==================================================
         # CHAT SUBSCRIBER
         # ==================================================
 
-        self.chat_subscription = self.ros_node.create_subscription(
-            ChatMessage,
-            "/chat",
-            self.chat_callback,
-            10
+        self.chat_subscription = (
+            self.ros_node.create_subscription(
+                ChatMessage,
+                "/chat",
+                self.chat_callback,
+                10
+            )
         )
 
         # ==================================================
         # PRESENCE PUBLISHER
         # ==================================================
 
-        self.presence_publisher = self.ros_node.create_publisher(
-            UserPresence,
-            "/presence",
-            10
+        self.presence_publisher = (
+            self.ros_node.create_publisher(
+                UserPresence,
+                "/presence",
+                10
+            )
         )
 
         # ==================================================
         # PRESENCE SUBSCRIBER
         # ==================================================
 
-        self.presence_subscription = self.ros_node.create_subscription(
-            UserPresence,
-            "/presence",
-            self.presence_callback,
-            10
+        self.presence_subscription = (
+            self.ros_node.create_subscription(
+                UserPresence,
+                "/presence",
+                self.presence_callback,
+                10
+            )
         )
 
         # ==================================================
@@ -99,6 +123,10 @@ class TeamGUI(QMainWindow):
             1200,
             750
         )
+
+        # ==================================================
+        # CENTRAL WIDGET
+        # ==================================================
 
         central_widget = QWidget()
 
@@ -138,6 +166,7 @@ class TeamGUI(QMainWindow):
             5
         )
 
+        # LEFT SPACER
         left_spacer = QWidget()
 
         header_layout.addWidget(
@@ -146,6 +175,7 @@ class TeamGUI(QMainWindow):
             0
         )
 
+        # TITLE
         header = QLabel(
             "ROS 2 TEAM COMMUNICATION"
         )
@@ -168,6 +198,7 @@ class TeamGUI(QMainWindow):
             1
         )
 
+        # DOMAIN STATUS
         domain_id = os.environ.get(
             "ROS_DOMAIN_ID",
             "0"
@@ -178,7 +209,8 @@ class TeamGUI(QMainWindow):
         )
 
         self.status_label.setAlignment(
-            Qt.AlignRight | Qt.AlignVCenter
+            Qt.AlignRight |
+            Qt.AlignVCenter
         )
 
         self.status_label.setStyleSheet("""
@@ -219,7 +251,7 @@ class TeamGUI(QMainWindow):
         # ==================================================
 
         user_info = QLabel(
-            f"User: {self.username}    |    ID: {self.user_id}"
+            f"USER: {self.username}    |    ID: {self.user_id}"
         )
 
         user_info.setAlignment(
@@ -272,7 +304,7 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # TEAM MEMBERS
+        # TEAM MEMBERS TITLE
         members_title = QLabel(
             "TEAM MEMBERS"
         )
@@ -288,13 +320,14 @@ class TeamGUI(QMainWindow):
             members_title
         )
 
+        # USER LIST
         self.user_list = QListWidget()
 
         left_panel.addWidget(
             self.user_list
         )
 
-        # USER ACTIVITY
+        # USER ACTIVITY TITLE
         activity_title = QLabel(
             "USER ACTIVITY"
         )
@@ -310,6 +343,7 @@ class TeamGUI(QMainWindow):
             activity_title
         )
 
+        # USER ACTIVITY
         self.activity_log = QTextEdit()
 
         self.activity_log.setReadOnly(
@@ -345,7 +379,7 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # TEAM CHAT
+        # CHAT TITLE
         chat_title = QLabel(
             "TEAM CHAT"
         )
@@ -361,6 +395,7 @@ class TeamGUI(QMainWindow):
             chat_title
         )
 
+        # CHAT DISPLAY
         self.chat_display = QTextEdit()
 
         self.chat_display.setReadOnly(
@@ -371,7 +406,10 @@ class TeamGUI(QMainWindow):
             self.chat_display
         )
 
+        # ==================================================
         # MESSAGE INPUT
+        # ==================================================
+
         message_layout = QHBoxLayout()
 
         message_layout.setSpacing(
@@ -434,7 +472,7 @@ class TeamGUI(QMainWindow):
             8
         )
 
-        # ROS NODES
+        # ROS NODES TITLE
         nodes_title = QLabel(
             "ROS NODES"
         )
@@ -450,13 +488,14 @@ class TeamGUI(QMainWindow):
             nodes_title
         )
 
+        # ROS NODE LIST
         self.node_list = QListWidget()
 
         right_panel.addWidget(
             self.node_list
         )
 
-        # ROS EVENTS
+        # ROS EVENTS TITLE
         ros_events_title = QLabel(
             "ROS EVENTS"
         )
@@ -472,6 +511,7 @@ class TeamGUI(QMainWindow):
             ros_events_title
         )
 
+        # ROS EVENTS
         self.ros_events = QTextEdit()
 
         self.ros_events.setReadOnly(
@@ -483,7 +523,7 @@ class TeamGUI(QMainWindow):
         )
 
         # ==================================================
-        # ADD PANELS TO MAIN AREA
+        # ADD PANELS
         # ==================================================
 
         main_area.addWidget(
@@ -534,7 +574,7 @@ class TeamGUI(QMainWindow):
         )
 
         # ==================================================
-        # USER OFFLINE CHECK
+        # USER CHECK TIMER
         # ==================================================
 
         self.user_check_timer = QTimer()
@@ -548,7 +588,7 @@ class TeamGUI(QMainWindow):
         )
 
         # ==================================================
-        # ROS NODE MONITOR
+        # ROS NODE CHECK TIMER
         # ==================================================
 
         self.node_check_timer = QTimer()
@@ -567,16 +607,24 @@ class TeamGUI(QMainWindow):
 
     def send_message(self):
 
-        message = self.message_input.text().strip()
+        message = (
+            self.message_input
+            .text()
+            .strip()
+        )
 
         if not message:
             return
 
         msg = ChatMessage()
 
-        msg.sender.username = self.username
+        msg.sender.username = (
+            self.username
+        )
 
-        msg.sender.user_id = self.user_id
+        msg.sender.user_id = (
+            self.user_id
+        )
 
         msg.message = message
 
@@ -596,9 +644,19 @@ class TeamGUI(QMainWindow):
 
     def chat_callback(self, msg):
 
+        timestamp = time.strftime(
+            "%H:%M:%S",
+            time.localtime(
+                msg.timestamp
+            )
+        )
+
         self.chat_display.append(
-            f"[{msg.sender.username} | "
-            f"{msg.sender.user_id}]  "
+            f"<b>[{timestamp}] "
+            f"{msg.sender.username}</b> "
+            f"<span style='color:#8b949e;'>"
+            f"[{msg.sender.user_id}]"
+            f"</span><br>"
             f"{msg.message}"
         )
 
@@ -610,9 +668,13 @@ class TeamGUI(QMainWindow):
 
         msg = UserPresence()
 
-        msg.user.username = self.username
+        msg.user.username = (
+            self.username
+        )
 
-        msg.user.user_id = self.user_id
+        msg.user.user_id = (
+            self.user_id
+        )
 
         msg.timestamp = int(
             time.time()
@@ -628,9 +690,13 @@ class TeamGUI(QMainWindow):
 
     def presence_callback(self, msg):
 
-        username = msg.user.username
+        username = (
+            msg.user.username
+        )
 
-        user_id = msg.user.user_id
+        user_id = (
+            msg.user.user_id
+        )
 
         current_time = time.time()
 
@@ -641,9 +707,15 @@ class TeamGUI(QMainWindow):
                 "last_seen": current_time
             }
 
+            timestamp = time.strftime(
+                "%H:%M:%S"
+            )
+
             self.activity_log.append(
+                f"[{timestamp}] "
                 f"User joined: "
-                f"{username} [{user_id}]"
+                f"{username} "
+                f"[{user_id}]"
             )
 
         else:
@@ -664,7 +736,9 @@ class TeamGUI(QMainWindow):
 
         users_to_remove = []
 
-        for user_id, user_data in self.users.items():
+        for user_id, user_data in (
+            self.users.items()
+        ):
 
             time_since_last_seen = (
                 current_time
@@ -673,7 +747,12 @@ class TeamGUI(QMainWindow):
 
             if time_since_last_seen > 3:
 
+                timestamp = time.strftime(
+                    "%H:%M:%S"
+                )
+
                 self.activity_log.append(
+                    f"[{timestamp}] "
                     f"User offline: "
                     f"{user_data['username']} "
                     f"[{user_id}]"
@@ -699,21 +778,29 @@ class TeamGUI(QMainWindow):
 
         self.user_list.clear()
 
-        # Current user
+        # --------------------------------------------------
+        # CURRENT USER
+        # --------------------------------------------------
+
         self.user_list.addItem(
             f"● {self.username} "
-            f"[{self.user_id}]"
+            f"[{self.user_id}]  (YOU)"
         )
 
-        # Other users
-        for user_id, user_data in self.users.items():
+        # --------------------------------------------------
+        # OTHER USERS
+        # --------------------------------------------------
+
+        for user_id, user_data in (
+            self.users.items()
+        ):
 
             if user_id == self.user_id:
                 continue
 
             self.user_list.addItem(
                 f"● {user_data['username']} "
-                f"[{user_id}]"
+                f"[{user_id}]  ONLINE"
             )
 
     # ======================================================
@@ -731,16 +818,24 @@ class TeamGUI(QMainWindow):
             current_nodes
         )
 
-        # First scan
+        # --------------------------------------------------
+        # FIRST SCAN
+        # --------------------------------------------------
+
         if not self.known_nodes:
 
-            self.known_nodes = current_nodes
+            self.known_nodes = (
+                current_nodes
+            )
 
             self.update_node_list()
 
             return
 
-        # New nodes
+        # --------------------------------------------------
+        # NEW NODES
+        # --------------------------------------------------
+
         new_nodes = (
             current_nodes
             - self.known_nodes
@@ -748,15 +843,26 @@ class TeamGUI(QMainWindow):
 
         for node in new_nodes:
 
-            node_name = self.format_node_name(
-                node
+            node_name = (
+                self.format_node_name(
+                    node
+                )
+            )
+
+            timestamp = time.strftime(
+                "%H:%M:%S"
             )
 
             self.ros_events.append(
-                f"{node_name} joined"
+                f"[{timestamp}] "
+                f"NODE JOINED: "
+                f"{node_name}"
             )
 
-        # Removed nodes
+        # --------------------------------------------------
+        # REMOVED NODES
+        # --------------------------------------------------
+
         removed_nodes = (
             self.known_nodes
             - current_nodes
@@ -764,15 +870,25 @@ class TeamGUI(QMainWindow):
 
         for node in removed_nodes:
 
-            node_name = self.format_node_name(
-                node
+            node_name = (
+                self.format_node_name(
+                    node
+                )
+            )
+
+            timestamp = time.strftime(
+                "%H:%M:%S"
             )
 
             self.ros_events.append(
-                f"{node_name} left"
+                f"[{timestamp}] "
+                f"NODE LEFT: "
+                f"{node_name}"
             )
 
-        self.known_nodes = current_nodes
+        self.known_nodes = (
+            current_nodes
+        )
 
         self.update_node_list()
 
@@ -788,10 +904,14 @@ class TeamGUI(QMainWindow):
             self.known_nodes
         ):
 
-            self.node_list.addItem(
+            node_name = (
                 self.format_node_name(
                     node
                 )
+            )
+
+            self.node_list.addItem(
+                f"● {node_name}"
             )
 
     # ======================================================
@@ -806,7 +926,9 @@ class TeamGUI(QMainWindow):
 
             return f"/{node_name}"
 
-        return f"{namespace}/{node_name}"
+        return (
+            f"{namespace}/{node_name}"
+        )
 
     # ======================================================
     # PROCESS ROS
