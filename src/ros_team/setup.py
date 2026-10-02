@@ -10,6 +10,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        ('share/ros_team/launch', ['launch/team_system.launch.py']),
+
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -29,6 +31,8 @@ setup(
             'presence_node = ros_team.presence_node:main',
             'presence_monitor = ros_team.presence_monitor:main',
             'ros_monitor = ros_team.ros_monitor:main',
+            'team_monitor = ros_team.team_monitor:main',
+            'team_gui = ros_team.team_gui:main',
         ],
     },
 )
