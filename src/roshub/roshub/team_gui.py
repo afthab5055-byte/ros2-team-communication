@@ -7,8 +7,8 @@ import os
 import rclpy
 from rclpy.node import Node
 
-from ros_team_msgs.msg import ChatMessage
-from ros_team_msgs.msg import UserPresence
+from roshub_msgs.msg import ChatMessage
+from roshub_msgs.msg import UserPresence
 
 from PyQt5.QtWidgets import (
     QApplication,

@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from ros_team_msgs.msg import ChatMessage
+from roshub_msgs.msg import ChatMessage
 import time
 import threading
 import uuid

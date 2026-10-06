@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from ros_team_msgs.msg import UserPresence
+from roshub_msgs.msg import UserPresence
 import uuid
 import time
 
